@@ -47,6 +47,7 @@ curl http://localhost:8080 # <!DOCTYPE html>
 ## hooks
 
 ```sh
+yarn husky install
 yarn husky add .husky/pre-commit "yarn pretty-quick --staged"
 yarn husky add .husky/commit-msg "yarn commitlint --edit \$1"
 ```

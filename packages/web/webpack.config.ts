@@ -70,7 +70,6 @@ const config = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.EnvironmentPlugin({
-      FFMPEG_CORE_PATH: "ffmpeg/ffmpeg-core.js",
       NODE_ENV: "development",
     }),
     new webpack.ProvidePlugin({

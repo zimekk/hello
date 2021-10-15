@@ -40,7 +40,6 @@ export default (env, { mode }, dev = mode === "development") => ({
         options: {
           presets: ["@babel/preset-react", "@babel/preset-typescript"],
           plugins: [].concat(dev ? "react-hot-loader/babel" : []),
-          // plugins: ["react-hot-loader/babel"],
         },
       },
     ],
@@ -62,10 +61,7 @@ export default (env, { mode }, dev = mode === "development") => ({
     clean: true,
   },
   plugins: [
-    // dev && new webpack.HotModuleReplacementPlugin(),
-    new webpack.EnvironmentPlugin({
-      // NODE_ENV: "development",
-    }),
+    new webpack.EnvironmentPlugin({}),
     new webpack.ProvidePlugin({
       Buffer: ["buffer", "Buffer"],
     }),

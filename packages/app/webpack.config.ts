@@ -16,28 +16,9 @@ class RequireResolvePlugin {
 
   apply(compiler) {
     const { name } = this.constructor;
-    // const { hooks, webpack, options } = compiler;
     compiler.hooks.emit.tapAsync({ name }, this.emit.bind(this));
   }
 }
-
-// const waitFor = () => {
-//   let resolve;
-//   let promise = new Promise((r) => {
-//     resolve = r;
-//   })
-//   return [
-//     (...args) => promise.then((fn: any) => fn(...args)),
-//     (fn) => {
-//       if (resolve) {
-//         resolve(fn);
-//         resolve = null;
-//       }
-//       promise = Promise.resolve(fn)
-//     },
-//   ]
-// }
-// const [middleware, resolve] = waitFor();
 
 const subject$ = new Subject();
 const resolve$ = new Subject();
@@ -69,7 +50,6 @@ const config = (env, { mode }, dev = mode === "development") => ({
         exclude: /node_modules/,
         options: {
           presets: ["@babel/preset-react", "@babel/preset-typescript"],
-          // plugins: ["react-hot-loader/babel"],
         },
       },
     ],
@@ -87,10 +67,7 @@ const config = (env, { mode }, dev = mode === "development") => ({
     },
     path: path.resolve(__dirname, "lib"),
   },
-  plugins: [
-    dev && new RequireResolvePlugin(),
-    //   new webpack.HotModuleReplacementPlugin(),
-  ].filter(Boolean),
+  plugins: [dev && new RequireResolvePlugin()].filter(Boolean),
 });
 
 export default (env, argv) =>
@@ -104,17 +81,7 @@ export default (env, argv) =>
           if (!devServer) {
             throw new Error("webpack-dev-server is not defined");
           }
-          console.log(["onBeforeSetupMiddleware"]);
           devServer.app.use(middleware);
-        },
-        onListening: function (devServer) {
-          if (!devServer) {
-            throw new Error("webpack-dev-server is not defined");
-          }
-          console.log(["onListening"]);
-
-          const port = devServer.server.address().port;
-          console.log("Listening on port:", port);
         },
       },
       output: {

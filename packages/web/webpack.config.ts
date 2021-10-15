@@ -1,20 +1,13 @@
-// import CopyWebpackPlugin from "copy-webpack-plugin";
-import HtmlWebpackPlugin from "html-webpack-plugin";
-import * as path from "path";
+import path from "path";
 import webpack from "webpack";
 import env from "dotenv";
 
 env.config({ path: path.resolve(__dirname, "../../.env") });
 
-const dev = process.env.NODE_ENV === "development";
-
-const config = {
+export default (env, { mode }, dev = mode === "development") => ({
   target: "web",
-  devServer: {
-    port: 8080,
-  },
-  devtool: dev && "inline-source-map",
-  entry: ["react-hot-loader/patch"].concat(require.resolve("./src")),
+  devtool: dev ? "eval" : "source-map",
+  entry: require.resolve("./src"),
   module: {
     rules: [
       {
@@ -46,7 +39,8 @@ const config = {
         exclude: /node_modules/,
         options: {
           presets: ["@babel/preset-react", "@babel/preset-typescript"],
-          plugins: ["react-hot-loader/babel"],
+          plugins: [].concat(dev ? "react-hot-loader/babel" : []),
+          // plugins: ["react-hot-loader/babel"],
         },
       },
     ],
@@ -68,17 +62,15 @@ const config = {
     clean: true,
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
+    // dev && new webpack.HotModuleReplacementPlugin(),
     new webpack.EnvironmentPlugin({
-      NODE_ENV: "development",
+      // NODE_ENV: "development",
     }),
     new webpack.ProvidePlugin({
       Buffer: ["buffer", "Buffer"],
     }),
-    new HtmlWebpackPlugin({
+    new (require("html-webpack-plugin"))({
       favicon: require.resolve("./src/assets/favicon.ico"),
     }),
-  ],
-};
-
-export default config;
+  ].filter(Boolean),
+});

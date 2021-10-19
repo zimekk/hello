@@ -7,7 +7,10 @@ env.config({ path: path.resolve(__dirname, "../../.env") });
 export default (env, { mode }, dev = mode === "development") => ({
   target: "web",
   devtool: dev ? "eval-cheap-source-map" : "source-map",
-  entry: require.resolve("./src"),
+  entry: {
+    main: require.resolve("./src"),
+    // sw: require.resolve("./src/service-worker"),
+  },
   module: {
     rules: [
       {
@@ -66,7 +69,13 @@ export default (env, { mode }, dev = mode === "development") => ({
       Buffer: ["buffer", "Buffer"],
     }),
     new (require("html-webpack-plugin"))({
+      excludeChunks: ["sw"],
       favicon: require.resolve("./src/assets/favicon.ico"),
     }),
+    !dev &&
+      new (require("workbox-webpack-plugin").InjectManifest)({
+        swSrc: require.resolve("./src/service-worker"),
+        swDest: "sw.js",
+      }),
   ].filter(Boolean),
 });

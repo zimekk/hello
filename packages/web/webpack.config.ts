@@ -9,7 +9,7 @@ export default (env, { mode }, dev = mode === "development") => ({
   devtool: dev ? "eval-cheap-source-map" : "source-map",
   entry: {
     main: require.resolve("./src"),
-    // sw: require.resolve("./src/service-worker"),
+    sw: require.resolve("./src/service-worker"),
   },
   module: {
     rules: [
@@ -72,10 +72,10 @@ export default (env, { mode }, dev = mode === "development") => ({
       excludeChunks: ["sw"],
       favicon: require.resolve("./src/assets/favicon.ico"),
     }),
-    !dev &&
-      new (require("workbox-webpack-plugin").InjectManifest)({
-        swSrc: require.resolve("./src/service-worker"),
-        swDest: "sw.js",
-      }),
+    // !dev &&
+    //   new (require("workbox-webpack-plugin").InjectManifest)({
+    //     swSrc: require.resolve("./src/service-worker"),
+    //     swDest: "sw.js",
+    //   }),
   ].filter(Boolean),
 });

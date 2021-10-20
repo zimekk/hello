@@ -79,6 +79,7 @@ export default (env, { mode }, dev = mode === "development") => ({
     new (require("favicons-webpack-plugin"))({
       logo: require.resolve("./src/assets/favicon.ico"),
       // https://web.dev/add-manifest/
+      // https://felixgerschau.com/how-to-make-your-react-app-a-progressive-web-app-pwa/#adding-a-manifest-file
       manifest: require.resolve("./src/assets/manifest.json"),
       mode: "light",
     }),

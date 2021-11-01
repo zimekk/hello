@@ -85,6 +85,7 @@ export default (env, { mode }, dev = mode === "development") => ({
     }),
     // https://webpack.js.org/plugins/html-webpack-plugin/
     new (require("html-webpack-plugin"))({
+      title: require("./src/assets/manifest").name,
       excludeChunks: ["sw"],
       // favicon: require.resolve("./src/assets/favicon.ico"),
     }),

@@ -1,8 +1,13 @@
-import React from "react";
+import React, { StrictMode } from "react";
 import { render } from "react-dom";
 import App from "./containers/App";
 
-render(<App />, document.body.appendChild(document.createElement("div")));
+render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+  document.body.appendChild(document.createElement("div"))
+);
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {

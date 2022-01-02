@@ -1,11 +1,12 @@
 import path from "path";
-import express, { Router, json } from "express";
+import express, { Router } from "express";
 
 export const router = Router()
-  .use("/api", (req, res) => res.json({ hello: "Hello" }))
+  .use("/api", (_req, res) => res.json({ hello: "Hello" }))
   .use(require("./push").default());
 
 class Server {
+  app: Object;
   options: Object;
 
   constructor(options = {}) {
@@ -18,7 +19,7 @@ class Server {
 
   async initialize() {
     this.setupApp();
-    this.setupFeatures();
+    this.setupMiddlewares();
     this.createServer();
 
     if (this.options.setupExitSignals) {
@@ -34,45 +35,40 @@ class Server {
     this.app = new express();
   }
 
-  setupStaticFeature() {
-    this.options.static.forEach((staticOption) => {
-      staticOption.publicPath.forEach((publicPath) => {
-        this.app.use(
-          publicPath,
-          express.static(staticOption.directory, staticOption.staticOptions)
-        );
+  setupMiddlewares() {
+    let middlewares = [];
+
+    if (/** @type {NormalizedStatic[]} */ this.options.static.length > 0) {
+      /** @type {NormalizedStatic[]} */
+      this.options.static.forEach((staticOption) => {
+        staticOption.publicPath.forEach((publicPath) => {
+          middlewares.push({
+            name: "express-static",
+            path: publicPath,
+            middleware: express.static(
+              staticOption.directory,
+              staticOption.staticOptions
+            ),
+          });
+        });
       });
-    });
-  }
-
-  setupOnBeforeSetupMiddlewareFeature() {
-    this.options.onBeforeSetupMiddleware(this);
-  }
-
-  setupFeatures() {
-    const features = {
-      static: () => {
-        this.setupStaticFeature();
-      },
-      onBeforeSetupMiddleware: () => {
-        if (typeof this.options.onBeforeSetupMiddleware === "function") {
-          this.setupOnBeforeSetupMiddlewareFeature();
-        }
-      },
-    };
-
-    const runnableFeatures = [];
-
-    if (this.options.onBeforeSetupMiddleware) {
-      runnableFeatures.push("onBeforeSetupMiddleware");
     }
 
-    if (this.options.static) {
-      runnableFeatures.push("static");
+    if (typeof this.options.setupMiddlewares === "function") {
+      middlewares = this.options.setupMiddlewares(middlewares, this);
     }
 
-    runnableFeatures.forEach((feature) => {
-      features[feature]();
+    middlewares.forEach((middleware) => {
+      if (typeof middleware === "function") {
+        /** @type {import("express").Application} */
+        this.app.use(middleware);
+      } else if (typeof middleware.path !== "undefined") {
+        /** @type {import("express").Application} */
+        this.app.use(middleware.path, middleware.middleware);
+      } else {
+        /** @type {import("express").Application} */
+        this.app.use(middleware.middleware);
+      }
     });
   }
 
@@ -154,11 +150,12 @@ if (process.mainModule.filename === __filename) {
   const server = new Server({
     port: 8080,
     static: [defaultOptionsForStatic],
-    onBeforeSetupMiddleware: async function (devServer) {
+    setupMiddlewares: (middlewares, devServer) => {
       if (!devServer) {
         throw new Error("webpack-dev-server is not defined");
       }
       devServer.app.use(require("morgan")("combined")).use(middleware);
+      return middlewares;
     },
     onListening: function (devServer) {
       if (!devServer) {

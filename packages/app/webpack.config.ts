@@ -77,11 +77,12 @@ export default (env, argv) =>
       ...config,
       devServer: {
         ...devServer,
-        onBeforeSetupMiddleware: async function (devServer) {
+        setupMiddlewares: (middlewares, devServer) => {
           if (!devServer) {
             throw new Error("webpack-dev-server is not defined");
           }
           devServer.app.use(middleware);
+          return middlewares;
         },
       },
       output: {

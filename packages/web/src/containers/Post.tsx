@@ -5,7 +5,7 @@ export default function Section() {
   const [status, setStatus] = useState("supported");
   const [text, setText] = useState("");
   const [inbox, setInbox] = useState<Record<string, string>>({});
-  console.log({ inbox });
+
   useEffect(() => {
     navigator.serviceWorker.addEventListener("message", function (event) {
       // A message has been received, now show the message on the page.

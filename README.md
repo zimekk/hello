@@ -2,6 +2,17 @@
 
 [zimekk.github.io/hello](https://zimekk.github.io/hello)
 
+- [ ] Edit repository details / Website
+- [ ] Settings / GitHub Pages / Select Branch
+- [ ] Clone repository
+- [ ] Update README.md
+- [ ] Push changes
+
+```sh
+git commit --amend -am "chore: initial commit"
+git push -f
+```
+
 ## install
 
 ```sh

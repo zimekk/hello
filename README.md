@@ -2,24 +2,16 @@
 
 [zimekk.github.io/hello](https://zimekk.github.io/hello)
 
-## settings
-
-```sh
-ssh-keygen -t rsa -b 4096 -C "" -f /tmp/ACTIONS_DEPLOY_KEY -N ""
-pbcopy < /tmp/ACTIONS_DEPLOY_KEY.pub # Deploy keys - Add deploy key
-pbcopy < /tmp/ACTIONS_DEPLOY_KEY # Secrets - New repository secret
-```
-
 ## install
 
 ```sh
-nvm install v12
+nvm install v14
 npm i -g yarn
 ```
 
 ```sh
-node -v # v12.19.0
-yarn -v # 1.22.10
+node -v # v14.18.2
+yarn -v # 1.22.19
 ```
 
 ## run
@@ -42,6 +34,10 @@ docker-compose up --build # app_1  | ⚡️[server]: Server is running at http:/
 
 ```sh
 curl http://localhost:8080 # <!DOCTYPE html>
+```
+
+```sh
+docker system prune -f # Deleted Containers:
 ```
 
 ## hooks

@@ -28,7 +28,7 @@ self.addEventListener("message", function (event) {
   // Get all the connected clients and forward the message along.
   const promise = self.clients.matchAll().then(function (clientList) {
     // event.source.id contains the ID of the sender of the message.
-    const senderID = event.source.id;
+    const senderID = (event.source as Client).id;
     clientList.forEach(function (client) {
       // Skip sending the message to the client that sent it.
       if (client.id === senderID) {

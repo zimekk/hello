@@ -16,6 +16,7 @@
   },
   "scripts": {
     "build": "webpack --mode production",
+    "coverage": "type-coverage",
     "serve": "node -r dotenv/config lib dotenv_config_path=../../.env",
     "start": "webpack serve --mode development"
   },

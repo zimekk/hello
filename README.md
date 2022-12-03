@@ -5,6 +5,7 @@
 - [ ] Edit repository details / Website
 - [ ] Settings / GitHub Pages / Select Branch
 - [ ] Clone repository
+- [ ] Update package.json
 - [ ] Update README.md
 - [ ] Push changes
 
